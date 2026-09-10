@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Exemplo Tesseract.js OCR</title>
+    <!-- Carrega a biblioteca Tesseract.js via CDN -->
+    <script src="https://unpkg.com"></script>
+
+</head>
+<body>
+
+    <h1>Leitor de Texto em Imagens (OCR)</h1>
+    
+    <!-- Elementos de entrada e saída -->
+    <input type="file" id="imagemInput" accept="image/*">
+    <br><br>
+    <button id="botaoExtrair">Extrair Texto</button>
+    
+    <p id="status">Status: Aguardando imagem...</p>
+    
+    <h3>Texto Encontrado:</h3>
+    <textarea id="resultado" rows="10" cols="50" placeholder="O texto extraído aparecerá aqui..."></textarea>
+
+    <script>
+        const imagemInput = document.getElementById('imagemInput');
+        const botaoExtrair = document.getElementById('botaoExtrair');
+        const statusP = document.getElementById('status');
+        const resultadoArea = document.getElementById('resultado');
+
+        botaoExtrair.addEventListener('click', async () => {
+            const arquivo = imagemInput.files[0];
+            
+            if (!arquivo) {
+                alert('Por favor, selecione uma imagem primeiro.');
+                return;
+            }
+
+            statusP.textContent = 'Status: Processando imagem... (Isso pode levar alguns segundos)';
+            resultadoArea.textContent = '';
+
+            try {
+                // Executa o reconhecimento de texto (idioma 'por' para português)
+                const { data: { text } } = await Tesseract.recognize(
+                    arquivo,
+                    'por',
+                    {
+                        logger: m => {
+                            // Mostra o progresso no parágrafo de status
+                            if (m.status === 'recognizing text') {
+                                statusP.textContent = `Status: Lendo texto... ${Math.round(m.progress * 100)}%`;
+                            } else {
+                                statusP.textContent = `Status: ${m.status}`;
+                            }
+                        }
+                    }
+                );
+
+                statusP.textContent = 'Status: Concluído!';
+                resultadoArea.textContent = text;
+            } catch (error) {
+                statusP.textContent = 'Status: Erro ao processar a imagem.';
+                console.error(error);
+            }
+        });
+    </script>
+
+</body>
+</html>
