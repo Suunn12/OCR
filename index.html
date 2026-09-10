@@ -1,67 +1,26 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Exemplo Tesseract.js OCR</title>
-    <!-- Carrega a biblioteca Tesseract.js via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-</head>
-<body>
+<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Leitor de Texto - OCR</title> <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script> <style> body { font-family: Arial, sans-serif; max-width: 800px; margin: 30px auto; padding: 20px; box-sizing: border-box; } h1 { text-align: center; } .botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; } .botao { display: inline-block; background: #007bff; color: white; padding: 12px 18px; border-radius: 8px; cursor: pointer; border: none; font-size: 16px; text-align: center; } .botao.camera { background: #28a745; } .botao:hover { opacity: 0.9; } input[type="file"] { display: none; } #preview { display: block; max-width: 100%; max-height: 500px; margin: 20px auto; border-radius: 8px; } #status { margin-top: 15px; font-weight: bold; } textarea { width: 100%; height: 250px; margin-top: 15px; padding: 10px; box-sizing: border-box; font-size: 16px; resize: vertical; } #ler { margin-top: 15px; padding: 12px 20px; font-size: 16px; background: #343a40; color: white; border: none; border-radius: 8px; cursor: pointer; } #ler:disabled { background: #999; cursor: not-allowed; } </style> </head> <body> <h1>📷 Leitor de Texto</h1> <div class="botoes">
+<!-- Selecionar uma imagem existente -->
+<label class="botao">
+  🖼️ Selecionar imagem
+  <input
+    type="file"
+    id="imagem"
+    accept="image/*"
+  >
+</label>
 
-    <h1>Leitor de Texto em Imagens (OCR)</h1>
-    
-    <!-- Elementos de entrada e saída -->
-    <input type="file" id="imagemInput" accept="image/*">
-    <br><br>
-    <button id="botaoExtrair">Extrair Texto</button>
-    
-    <p id="status">Status: Aguardando imagem...</p>
-    
-    <h3>Texto Encontrado:</h3>
-    <textarea id="resultado" rows="10" cols="50" placeholder="O texto extraído aparecerá aqui..."></textarea>
+<!-- Abrir câmera -->
+<label class="botao camera">
+  📷 Tirar foto
+  <input
+    type="file"
+    id="camera"
+    accept="image/*"
+    capture="environment"
+  >
+</label>
 
-    <script>
-        const imagemInput = document.getElementById('imagemInput');
-        const botaoExtrair = document.getElementById('botaoExtrair');
-        const statusP = document.getElementById('status');
-        const resultadoArea = document.getElementById('resultado');
+</div> <img id="preview" alt="Pré-visualização">
+<button id="ler">🔍 Ler texto</button>
 
-        botaoExtrair.addEventListener('click', async () => {
-            const arquivo = imagemInput.files[0];
-            
-            if (!arquivo) {
-                alert('Por favor, selecione uma imagem primeiro.');
-                return;
-            }
-
-            statusP.textContent = 'Status: Processando imagem... (Isso pode levar alguns segundos)';
-            resultadoArea.textContent = '';
-
-            try {
-                // Executa o reconhecimento de texto (idioma 'por' para português)
-                const { data: { text } } = await Tesseract.recognize(
-                    arquivo,
-                    'por',
-                    {
-                        logger: m => {
-                            // Mostra o progresso no parágrafo de status
-                            if (m.status === 'recognizing text') {
-                                statusP.textContent = `Status: Lendo texto... ${Math.round(m.progress * 100)}%`;
-                            } else {
-                                statusP.textContent = `Status: ${m.status}`;
-                            }
-                        }
-                    }
-                );
-
-                statusP.textContent = 'Status: Concluído!';
-                resultadoArea.textContent = text;
-            } catch (error) {
-                statusP.textContent = 'Status: Erro ao processar a imagem.';
-                console.error(error);
-            }
-        });
-    </script>
-
-</body>
-</html>
+<p id="status"></p> <textarea id="resultado" placeholder="O texto reconhecido aparecerá aqui..." ></textarea> <script> const inputImagem = document.getElementById("imagem"); const inputCamera = document.getElementById("camera"); const preview = document.getElementById("preview"); const botaoLer = document.getElementById("ler"); const status = document.getElementById("status"); const resultado = document.getElementById("resultado"); let arquivoSelecionado = null; // Quando selecionar uma imagem inputImagem.addEventListener("change", () => { if (inputImagem.files.length === 0) { return; } arquivoSelecionado = inputImagem.files[0]; mostrarImagem(); }); // Quando tirar uma foto inputCamera.addEventListener("change", () => { if (inputCamera.files.length === 0) { return; } arquivoSelecionado = inputCamera.files[0]; mostrarImagem(); }); // Mostra a imagem na tela function mostrarImagem() { preview.src = URL.createObjectURL(arquivoSelecionado); resultado.value = ""; status.textContent = "Imagem pronta para reconhecimento."; } // Executa o OCR botaoLer.addEventListener("click", async () => { if (!arquivoSelecionado) { alert("Selecione uma imagem ou tire uma foto primeiro."); return; } botaoLer.disabled = true; resultado.value = ""; status.textContent = "Iniciando reconhecimento..."; try { const resultadoOCR = await Tesseract.recognize( arquivoSelecionado, "por", { logger: info => { if (info.status === "recognizing text") { const porcentagem = Math.round(info.progress * 100); status.textContent = `Reconhecendo texto: ${porcentagem}%`; } else { status.textContent = info.status; } } } ); resultado.value = resultadoOCR.data.text; status.textContent = "✅ Reconhecimento concluído!"; } catch (erro) { console.error(erro); status.textContent = "❌ Erro ao reconhecer o texto."; } botaoLer.disabled = false; }); </script> </body> </html>
