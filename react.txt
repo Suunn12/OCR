@@ -1,0 +1,83 @@
+import { StyleSheet, View, Text, TextInput,TouchableOpacity} from 'react-native';
+import {useState, useRef} from 'react';
+
+export default function App() {
+  const [tela, DefTela] = useState('cadastro');
+
+  const usuarioRef = useRef(null);
+  const senhaRef = useRef(null);
+
+  return tela == 'cadastro' ?
+    //________Tela de Cadastro
+    <View style={estilos.tela}>
+      <View style={{width:'90%', height:'20%', marginTop:'25%', marginHorizontal:'auto', justifyContent:'center', gap:'5%'}}>
+        <Text style={estilos.subtitulo}>BEM-VINDO DE VOLTA</Text>
+        <Text style={estilos.titulo}>Entre na sua conta</Text>
+        <Text style={estilos.subtitulo2}>Acesse seu espaço e volte a produzir.</Text>
+      </View>
+
+      <View style={{width:'90%', height:'25%', marginHorizontal:'auto', justifyContent:'center', gap:'5%'}}>
+        <View style={{gap:'-5%'}}>
+          <TouchableOpacity onPress={() => usuarioRef.current?.focus()}>
+            <Text style={estilos.rotulo}>Usuário</Text>
+          </TouchableOpacity>
+          <TextInput ref={usuarioRef} style={estilos.cx_texto}/>
+        </View>
+
+        <View style={{gap:'-5%'}}>
+          <TouchableOpacity onPress={() => senhaRef.current?.focus()}>
+            <Text style={estilos.rotulo}>Senha</Text>
+          </TouchableOpacity>
+          <TextInput ref={senhaRef} style={estilos.cx_texto}/>
+        </View>
+
+        <TouchableOpacity>
+          <Text style={estilos.rotulo}>Esqueci minha senha</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity>
+        <Text style={estilos.btn_conectar}>Conectar ➔</Text>
+      </TouchableOpacity>
+
+    </View>
+    : tela == 'inicio' ?
+    //________Tela Inicial
+    <View style={estilos.tela}>
+      <Text>Inicio</Text>
+    </View>
+    :
+    //________Tela Camera
+    <View style={estilos.tela}>
+      <Text>Camera</Text>
+    </View>
+
+}
+
+const estilos = StyleSheet.create({
+  tela:{
+    flex:1,
+    backgroundColor:'rgb(45,45,50)',
+    marginTop:'35',
+  },
+  titulo:{
+    fontSize:38,
+  },
+  subtitulo:{
+    fontSize:22,
+    color:'rgb(90,70,255)',
+  },
+  subtitulo2:{
+    fontSize:18,
+  },
+  rotulo:{
+    fontSize:18,
+  },
+  btn_conectar:{
+    fontSize:18,
+
+  },
+  cx_texto:{
+    backgroundColor:'rgb(130,130,140)',
+  },
+});
