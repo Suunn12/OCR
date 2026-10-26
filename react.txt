@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TextInput,TouchableOpacity} from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TextInput,TouchableOpacity} from 'react-native';
 import {useState, useRef} from 'react';
 
 export default function App() {
@@ -10,35 +10,45 @@ export default function App() {
   return tela == 'cadastro' ?
     //________Tela de Cadastro
     <View style={estilos.tela}>
-      <View style={{width:'90%', height:'20%', marginTop:'25%', marginHorizontal:'auto', justifyContent:'center', gap:'5%'}}>
-        <Text style={estilos.subtitulo}>BEM-VINDO DE VOLTA</Text>
-        <Text style={estilos.titulo}>Entre na sua conta</Text>
-        <Text style={estilos.subtitulo2}>Acesse seu espaço e volte a produzir.</Text>
-      </View>
-
-      <View style={{width:'90%', height:'25%', marginHorizontal:'auto', justifyContent:'center', gap:'5%'}}>
-        <View style={{gap:'-5%'}}>
-          <TouchableOpacity onPress={() => usuarioRef.current?.focus()}>
-            <Text style={estilos.rotulo}>Usuário</Text>
-          </TouchableOpacity>
-          <TextInput ref={usuarioRef} style={estilos.cx_texto}/>
+      <ScrollView>
+        //________Cabeçalho
+        <View style={{backgroundColor:'green', width:'90%', marginTop:'40%', marginHorizontal:'auto'}}>
+          <Text style={estilos.subtitulo}>BEM-VINDO DE VOLTA</Text>
+          <Text style={estilos.titulo}>Entre na sua conta</Text>
+          <Text style={estilos.subtitulo2}>Acesse seu espaço e volte a produzir.</Text>
         </View>
 
-        <View style={{gap:'-5%'}}>
-          <TouchableOpacity onPress={() => senhaRef.current?.focus()}>
-            <Text style={estilos.rotulo}>Senha</Text>
-          </TouchableOpacity>
-          <TextInput ref={senhaRef} style={estilos.cx_texto}/>
+        //_______Formulário
+        <View style={{backgroundColor:'blue', width:'90%', marginTop:'5%', marginHorizontal:'auto'}}>
+          //________Usuário
+          <View>
+            <TouchableOpacity onPress={() => usuarioRef.current?.focus()}>
+              <Text style={estilos.rotulo}>Usuário</Text>
+            </TouchableOpacity>
+            <TextInput ref={usuarioRef} style={estilos.cx_texto}/>
+          </View>
+
+          //________Senha
+          <View>
+            <TouchableOpacity onPress={() => senhaRef.current?.focus()}>
+              <Text style={estilos.rotulo}>Senha</Text>
+            </TouchableOpacity>
+            <TextInput ref={senhaRef} style={estilos.cx_texto}/>
+          </View>
         </View>
 
-        <TouchableOpacity>
-          <Text style={estilos.rotulo}>Esqueci minha senha</Text>
+        //________Esqueci minha senha
+        <View style={{display:'flex', flexDirection:'row-reverse'}}>
+          <TouchableOpacity>
+            <Text style={estilos.rotulo}>Esqueci minha senha</Text>
+          </TouchableOpacity>
+        </View>
+
+        //________Botão conectar
+        <TouchableOpacity style={estilos.btn_conectar}>
+          <Text style={estilos.rotulo}>Conectar ➔</Text>
         </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity>
-        <Text style={estilos.btn_conectar}>Conectar ➔</Text>
-      </TouchableOpacity>
+      </ScrollView>
 
     </View>
     : tela == 'inicio' ?
@@ -57,27 +67,31 @@ export default function App() {
 const estilos = StyleSheet.create({
   tela:{
     flex:1,
-    backgroundColor:'rgb(45,45,50)',
-    marginTop:'35',
+    backgroundColor:'rgb(60, 60, 80)',
   },
   titulo:{
     fontSize:38,
+    color:'rgb(245, 244, 255)',
   },
   subtitulo:{
     fontSize:22,
-    color:'rgb(90,70,255)',
+    color:'rgbrgb(73, 71, 158)',
   },
   subtitulo2:{
     fontSize:18,
+    color:'rgb(245, 244, 255)',
   },
   rotulo:{
     fontSize:18,
+    color:'rgb(245, 244, 255)',
   },
   btn_conectar:{
-    fontSize:18,
-
+    width:'60%',
+    backgroundColor:'rgb(100,100,150)',
   },
   cx_texto:{
-    backgroundColor:'rgb(130,130,140)',
+    backgroundColor:'rgb(235, 242, 250)',
+    color:'rgb(20, 20, 40)',
+    borderRadius:20,
   },
 });
