@@ -1,25 +1,29 @@
-import { StyleSheet, ScrollView, View, Text, TextInput,TouchableOpacity} from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TextInput,TouchableOpacity, Image} from 'react-native';
 import {useState, useRef} from 'react';
 
 export default function App() {
-  const [tela, DefTela] = useState('cadastro');
+  const [tela, DefTela] = useState('inicio');
 
   const usuarioRef = useRef(null);
   const senhaRef = useRef(null);
+
+  const num_versao = '1.0.0'
+  const usuario_nome = 'Daniel';
+  const num_trabalhos_feitos = 0;
 
   return tela == 'cadastro' ?
     //________Tela de Cadastro
     <View style={estilos.tela}>
       <ScrollView>
         //________Cabeçalho
-        <View style={{backgroundColor:'green', width:'90%', marginTop:'40%', marginHorizontal:'auto'}}>
+        <View style={{width:'90%', marginTop:'40%', marginHorizontal:'auto', aspectRatio:'1/0.4', gap:'5%'}}>
           <Text style={estilos.subtitulo}>BEM-VINDO DE VOLTA</Text>
           <Text style={estilos.titulo}>Entre na sua conta</Text>
-          <Text style={estilos.subtitulo2}>Acesse seu espaço e volte a produzir.</Text>
+          <Text style={estilos.paragrafo}>Acesse seu espaço e volte a produzir.</Text>
         </View>
 
         //_______Formulário
-        <View style={{backgroundColor:'blue', width:'90%', marginTop:'5%', marginHorizontal:'auto'}}>
+        <View style={{ width:'90%', marginTop:'5%', marginHorizontal:'auto'}}>
           //________Usuário
           <View>
             <TouchableOpacity onPress={() => usuarioRef.current?.focus()}>
@@ -38,28 +42,69 @@ export default function App() {
         </View>
 
         //________Esqueci minha senha
-        <View style={{display:'flex', flexDirection:'row-reverse'}}>
-          <TouchableOpacity>
+        <View style={{flexDirection:'row-reverse', paddingRight:'5%', marginTop:'5%'}}>
+          <TouchableOpacity onPress={() => DefTela('esqueci_minha_senha')}>
             <Text style={estilos.rotulo}>Esqueci minha senha</Text>
           </TouchableOpacity>
         </View>
 
         //________Botão conectar
-        <TouchableOpacity style={estilos.btn_conectar}>
-          <Text style={estilos.rotulo}>Conectar ➔</Text>
+        <TouchableOpacity style={[estilos.btn_padrao, {marginHorizontal:'auto', marginTop:'15%'}]} onPress={() => DefTela('inicio')}>
+          <Text style={estilos.rotulo}>Conectar ⮕</Text>
         </TouchableOpacity>
       </ScrollView>
 
     </View>
-    : tela == 'inicio' ?
-    //________Tela Inicial
+    
+    : tela == 'esqueci_minha_senha' ?
+    //________Tela de Esqueci minha senha
     <View style={estilos.tela}>
-      <Text>Inicio</Text>
+      <Text style={estilos.paragrafo}>Esqueci minha senha</Text>
+
+      <TouchableOpacity style={[estilos.btn_padrao, {marginHorizontal:'auto', marginTop:'15%'}]} onPress={() => DefTela('cadastro')}>
+        <Text style={estilos.rotulo}>Voltar ⬅</Text>
+      </TouchableOpacity>
+
     </View>
+
+    : tela == 'inicio' ?
+    //________Tela Home
+    <View style={estilos.tela}>
+      <ScrollView>
+        //________Cabeçalho
+        <View>
+          <Text style={[estilos.paragrafo, {fontSize:22}]}>Olá, {usuario_nome}.</Text>
+          <Text style={estilos.paragrafo}>Você tem {num_trabalhos_feitos} trabalhos concluidos.</Text>
+        </View>
+        
+        //________Botão abrir camera
+        <TouchableOpacity style={[estilos.btn_padrao, {width:'25%', aspectRatio:1}]}>
+          <Image source={require('./assets/icon_camera.png')}/>
+        </TouchableOpacity>
+        
+        //________Botão abrir relatorio
+        <TouchableOpacity style={[estilos.btn_padrao, {width:'25%', aspectRatio:1}]}>
+          <Image source={require('./assets/icon_relatorio.png')}/>
+        </TouchableOpacity>
+
+        //________Botão Voltar
+        <TouchableOpacity style={[estilos.btn_padrao, {marginHorizontal:'auto', marginTop:'15%'}]} onPress={() => DefTela('cadastro')}>
+          <Text style={estilos.rotulo}>Voltar ⬅</Text>
+        </TouchableOpacity>
+
+        //________Texto de versão
+        <View>
+          <Text style={estilos.paragrafo}>Versão {num_versao}</Text>
+        </View>
+      </ScrollView>
+
+    </View>
+
     :
     //________Tela Camera
     <View style={estilos.tela}>
       <Text>Camera</Text>
+
     </View>
 
 }
@@ -67,7 +112,7 @@ export default function App() {
 const estilos = StyleSheet.create({
   tela:{
     flex:1,
-    backgroundColor:'rgb(60, 60, 80)',
+    backgroundColor:'rgb(50, 50, 60)',
   },
   titulo:{
     fontSize:38,
@@ -75,9 +120,9 @@ const estilos = StyleSheet.create({
   },
   subtitulo:{
     fontSize:22,
-    color:'rgbrgb(73, 71, 158)',
+    color:'rgbrgb(97, 90, 180)',
   },
-  subtitulo2:{
+  paragrafo:{
     fontSize:18,
     color:'rgb(245, 244, 255)',
   },
@@ -85,9 +130,13 @@ const estilos = StyleSheet.create({
     fontSize:18,
     color:'rgb(245, 244, 255)',
   },
-  btn_conectar:{
+  btn_padrao:{
     width:'60%',
-    backgroundColor:'rgb(100,100,150)',
+    aspectRatio:'1/0.20',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor:'rgbrgb(97, 90, 180)',
+    borderRadius:20,
   },
   cx_texto:{
     backgroundColor:'rgb(235, 242, 250)',
